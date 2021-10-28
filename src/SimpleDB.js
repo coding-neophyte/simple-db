@@ -1,4 +1,4 @@
-const { writeFile, readFile } = require('fs/promises');
+const { writeFile, readFile, readdir } = require('fs/promises');
 const shortid = require('shortid');
 const path = require('path');
 
@@ -11,9 +11,10 @@ class SimpleDB {
   save(fileObj){
     const newId = shortid.generate();
     fileObj.id = newId;
-    const stringedFile = JSON.stringify(fileObj);
+
     const jsonFile = `${fileObj.id}.json`;
     const filePath = path.join(this.rootDir, jsonFile);
+    const stringedFile = JSON.stringify(fileObj);
 
     return writeFile(filePath, stringedFile);
 
@@ -28,6 +29,24 @@ class SimpleDB {
       throw err;
     });
 
+  }
+
+  async getAll() {
+    const allFiles = await readdir(this.rootDir);
+
+    const filePromise = await Promise.all(
+      allFiles.map((file) =>
+        readFile(`${this.rootDir}/${file}`, 'utf-8')
+          .then((files) => JSON.parse(files))
+          .catch((err) => {
+            if (err.code === 'ENOENT') {
+              return null;
+            }
+            throw err;
+          })
+      )
+    );
+    return filePromise;
   }
 }
 

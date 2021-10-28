@@ -34,10 +34,16 @@ describe('save-test / get', () => {
 
   it('gets all files from directory', () => {
     const wholeDB = new SimpleDB;
-    const arrayOfObjects = [];
+    const arrayOfObjects = [{ name: 'new file' },
+      {  name: 'old file' }];
 
-    return wholeDB.getAll(arrayOfObjects)
-      .then((allObjects) => expect(allObjects).toEqual(arrayOfObjects));
+    const newObjectArray = [{ id: expect.any(String), name: 'new file' },
+      { id: expect.any(String), name: 'old file' }];
+
+    return wholeDB
+      .save(arrayOfObjects)
+      .then(() => wholeDB.getAll())
+      .then((allObjects) => expect(allObjects).toEqual(expect.arrayContaining(newObjectArray)));
   });
 
 
