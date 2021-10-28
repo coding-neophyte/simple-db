@@ -1,8 +1,8 @@
 const SimpleDB = require('../src/SimpleDB.js');
 const { rm, mkdir } = require('fs/promises');
-const shortid = require('shortid');
 
-describe('save-test', () => {
+
+describe('save-test / get', () => {
   const rootDir = './_test_/store';
   beforeEach(() => {
     return rm(rootDir, { force: true, recursive: true }).then(() =>
@@ -10,7 +10,7 @@ describe('save-test', () => {
     );
   });
 
-  it('should save a file and assign id ', () => {
+  it('should save a file and get by id ', () => {
     const simpleDB = new SimpleDB(rootDir);
     const newObj =
     {
@@ -21,6 +21,15 @@ describe('save-test', () => {
       .save(newObj)
       .then(() => simpleDB.get(newObj.id))
       .then((newFile) => expect(newFile).toEqual(actualFile));
+  });
+
+  it('should throw error if id does not exist', () => {
+    const newDB = new SimpleDB(rootDir);
+    const falseId = 'nothing';
+
+    return newDB
+      .get(falseId)
+      .then((dud) => expect(dud).toEqual(null));
   });
 
 

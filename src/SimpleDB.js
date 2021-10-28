@@ -21,7 +21,12 @@ class SimpleDB {
 
   get(id){
     this.filePath = path.join(this.rootDir, `${id}.json`);
-    return readFile(this.filePath, 'utf-8').then((file) => JSON.parse(file));
+    return readFile(this.filePath, 'utf-8').then((file) => JSON.parse(file)).catch((err) => {
+      if (err.code === 'ENOENT') {
+        return null;
+      }
+      throw err;
+    });
 
   }
 }
