@@ -32,5 +32,13 @@ describe('save-test / get', () => {
       .then((dud) => expect(dud).toEqual(null));
   });
 
+  it('gets all files from directory', () => {
+    const wholeDB = new SimpleDB;
+    const arrayOfObjects = [];
+
+    return wholeDB.getAll(arrayOfObjects)
+      .then((allObjects) => expect(allObjects).toEqual(arrayOfObjects));
+  });
+
 
 });
