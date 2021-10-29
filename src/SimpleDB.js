@@ -9,6 +9,7 @@ class SimpleDB {
 
   }
   save(fileObj){
+      console.log(this.rootDir);
     const newId = shortid.generate();
     fileObj.id = newId;
 
@@ -33,7 +34,7 @@ class SimpleDB {
 
   async getAll() {
     const allFiles = await readdir(this.rootDir);
-
+    console.log(allFiles);
     const filePromise = await Promise.all(
       allFiles.map((file) =>
         readFile(`${this.rootDir}/${file}`, 'utf-8')

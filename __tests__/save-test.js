@@ -33,15 +33,16 @@ describe('save-test / get', () => {
   });
 
   it('gets all files from directory', () => {
-    const wholeDB = new SimpleDB;
-    const arrayOfObjects = [{ name: 'new file' },
-      {  name: 'old file' }];
+    const wholeDB = new SimpleDB(rootDir);
+    const fileOne = { name: 'new file' };
+    const fileTwo = {  name: 'old file' };
 
     const newObjectArray = [{ id: expect.any(String), name: 'new file' },
       { id: expect.any(String), name: 'old file' }];
 
     return wholeDB
-      .save(arrayOfObjects)
+      .save(fileOne)
+      .then(() => wholeDB.save(fileTwo))
       .then(() => wholeDB.getAll())
       .then((allObjects) => expect(allObjects).toEqual(expect.arrayContaining(newObjectArray)));
   });
